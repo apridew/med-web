@@ -1,8 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Sign_Up.css';
 
 function Signup() {
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(true);
+
+  const handlePhoneNumberChange = (event) => {
+    const value = event.target.value;
+    setPhoneNumber(value);
+
+    if (/^[0-9]{10}$/.test(value)) {
+      setIsPhoneNumberValid(true);
+    } else {
+      setIsPhoneNumberValid(false);
+    }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (isPhoneNumberValid) {
+      console.log('Form Submited');
+    } else {
+      console.log('Please enter valid phone numbers');
+    }
+  };
+
   return (
     <div className="container" style={{ marginTop: '5%' }}>
       <div className="signup-grid">
@@ -18,7 +42,7 @@ function Signup() {
           </span>
         </div>
         <div className="signup-form">
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="name">Name</label>
               <input
@@ -38,10 +62,19 @@ function Signup() {
                 name="phone"
                 id="phone"
                 required
-                className="form-control"
+                className={`form-control ${isPhoneNumberValid ? '' : 'error'}`}
                 placeholder="Enter your phone number"
                 aria-describedby="helpId"
+                minLength={10}
+                maxLength={10}
+                inputMode="numeric"
+                pattern="^[0-9]{10}$"
+                value={phoneNumber}
+                onChange={handlePhoneNumberChange}
               />
+              {!isPhoneNumberValid && (
+                <span className="error-message"> Please enter only 10 digits number</span>
+              )}
             </div>
             <div className="form-group">
               <label htmlFor="email">Email</label>
